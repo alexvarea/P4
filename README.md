@@ -143,10 +143,13 @@ Complete el código necesario para entrenar modelos GMM.
  
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
-    ![alt text](img/densprob_mfcc.png) 
+  
+    ![alt text](img/densprob_mfcc.png)
+  
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+  
     ![alt text](img/gmm_juntos.png) 
     ![alt text](img/gmm_comparacion.png) 
  
@@ -173,11 +176,13 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+  
 | Método | Umbral óptimo | Falsas Alarmas | Pérdidas | Cost Detection            |
 |--------|---------------|----------------|----------|---------------------------|
-| LP     | 0.4036        | 32/1000        | 75 /250   | 58.8                     |
+| LP     | 0.4036        | 32/1000        | 75 /250  | 58.8                      |
 | LPCC   | 1.463         | 5/1000         | 25/250   | 14.5                      |
 | MFCC   | 1.559         | 10/1000        | 39/250   | 24.6                      |
+
   LP:
   ![alt text](img/res_lp.png)
  
