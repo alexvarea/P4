@@ -100,18 +100,42 @@ ejercicios indicados.
   
   + Indique **todas** las órdenes necesarias para obtener las gráficas a partir de las señales 
     parametrizadas.
-  + ¿Cuál de ellas le parece que contiene más información?
 
+   ### -LP:
+  ```bash
+  plot_gmm_feat -x 2 -y 3 -g green work/gmm/lp/SES003.gmm work/lp/BLOCK00/SES003/*
+  ```
+    ![alt text](img/gmmshow_lp.png)
+
+   ### -LPCC:
+    ```bash
+  plot_gmm_feat -x 2 -y 3 -g green work/gmm/lpcc/SES003.gmm work/lpcc/BLOCK00/SES003/*
+  ```
+    ![alt text](img/gmmshow_lpcc.png)
+   ### -MFCC:
+
+  ```bash
+  plot_gmm_feat -x 2 -y 3 -g green work/gmm/mfcc/SES003.gmm work/mfcc/BLOCK00/SES003/*
+  ```
+    ![alt text](img/gmmshow_mfcc.png)
+  
+  + ¿Cuál de ellas le parece que contiene más información?
+Cuanto menos correladas estén, más información obtendremos. Queremos la mayor dispresión de los puntos.
+Los datos en la LP están más correlados, sin embargo, podemos observar mayor dispresión, por lo tanto, mayor incorrelación, en las gráficas de LPCC y MFCC.
 - Usando el programa <code>pearson</code>, obtenga los coeficientes de correlación normalizada entre los
   parámetros 2 y 3 para un locutor, y rellene la tabla siguiente con los valores obtenidos.
 
-  |                        | LP   | LPCC | MFCC |
-  |------------------------|:----:|:----:|:----:|
-  | &rho;<sub>x</sub>[2,3] |      |      |      |
+  |                        | LP      | LPCC   |   MFCC |
+  |------------------------|:-------:|:------:|:------:|
+  | &rho;<sub>x</sub>[2,3] | -0.555  | 0.298  |  0.335 |
   
+    ![alt text](img/pearson_lp.png)
+    ![alt text](img/pearson_lpcc.png)
+    ![alt text](img/pearson_mfcc.png)
   + Compare los resultados de <code>pearson</code> con los obtenidos gráficamente.
   
 - Según la teoría, ¿qué parámetros considera adecuados para el cálculo de los coeficientes LPCC y MFCC?
+Los LPCC y MFCC suelen tener al rededor de 13 coeficientes, mientras que trabajando con MFCC, se toman entre 24 y 40 filtros.
 
 ### Entrenamiento y visualización de los GMM.
 
@@ -119,10 +143,12 @@ Complete el código necesario para entrenar modelos GMM.
 
 - Inserte una gráfica que muestre la función de densidad de probabilidad modelada por el GMM de un locutor
   para sus dos primeros coeficientes de MFCC.
-
+    ![alt text](img/densprob_mfcc.png) 
 - Inserte una gráfica que permita comparar los modelos y poblaciones de dos locutores distintos (la gŕafica
   de la página 20 del enunciado puede servirle de referencia del resultado deseado). Analice la capacidad
   del modelado GMM para diferenciar las señales de uno y otro.
+    ![alt text](img/gmm_juntos.png) 
+    ![alt text](img/gmm_comparacion.png) 
 
 ### Reconocimiento del locutor.
 
@@ -130,7 +156,15 @@ Complete el código necesario para realizar reconociminto del locutor y optimice
 
 - Inserte una tabla con la tasa de error obtenida en el reconocimiento de los locutores de la base de datos
   SPEECON usando su mejor sistema de reconocimiento para los parámetros LP, LPCC y MFCC.
-
+  
+  | Caract | Error rate    |
+  |--------|---------------|
+  | LP     | 11.20%        |
+  | LPCC   | 0.38%         |
+  | MFCC   | 1.66%         |
+![lp](img/errate_lp.png)
+![lpcc](img/errate_lp.png)
+![mfcc](img/errate_mfcc.png)
 ### Verificación del locutor.
 
 Complete el código necesario para realizar verificación del locutor y optimice sus parámetros.
@@ -139,6 +173,19 @@ Complete el código necesario para realizar verificación del locutor y optimice
   de verificación de SPEECON. La tabla debe incluir el umbral óptimo, el número de falsas alarmas y de
   pérdidas, y el score obtenido usando la parametrización que mejor resultado le hubiera dado en la tarea
   de reconocimiento.
+| Método | Umbral óptimo | Falsas Alarmas | Pérdidas | Cost Detection            |
+|--------|---------------|----------------|----------|---------------------------|
+| LP     | 0.4036        | 32/1000        | 75 /250  | 58.8                      |
+| LPCC   | 1.463         | 5/1000         | 25/250   | 14.5                      |
+| MFCC   | 1.559         | 10/1000        | 39/250   | 24.6                      |
+  LP:
+  ![alt text](img/res_lp.png)
+
+  LPCC:
+  ![alt text](img/res_lpcc.png)
+
+  MFCC:
+  ![alt text](img/res_mfcc.png)
  
 ### Test final
 
