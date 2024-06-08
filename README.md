@@ -32,18 +32,67 @@ ejercicios indicados.
 - Analice el script `wav2lp.sh` y explique la misión de los distintos comandos involucrados en el *pipeline*
   principal (`sox`, `$X2X`, `$FRAME`, `$WINDOW` y `$LPC`). Explique el significado de cada una de las 
   opciones empleadas y de sus valores.
+ El script `wav2lp.sh` se utiliza para la extracción de características de audio utilizando diversas herramientas como `sox` y las utilidades de SPTK.
+
+  #### Misión de los Comandos Involucrados en el Pipeline Principal
+
+  1. **Sox**:
+     - **Misión**: `sox` convierte el archivo de audio `inputfile` en un flujo de datos en bruto (raw) de 16 bits.
+     - **Opciones**:
+       - `-t raw`: Especifica que la salida debe ser en formato raw.
+       - `-e signed`: Especifica que los datos son firmados.
+       - `-b 16`: Especifica que cada muestra tiene 16 bits.
+
+  2. **X2X**: 
+     - **Misión**: `x2x` convierte los datos de entrada a float de 4 bytes..
+     - **Opciones**:
+       - `+sf`: Convierte datos de tipo `float` a `short`.
+
+  3. **Frame**: 
+     - **Misión**: `frame` divide la señal en tramas de longitud fija.
+     - **Opciones**:
+       - `-l 240`: Longitud de la trama en muestras.
+       - `-p 80`: Desplazamiento entre tramas consecutivas.
+
+  4. **Window**:
+     - **Misión**: `window` aplica una ventana a cada trama para suavizar los bordes.
+     - **Opciones**:
+       - `-l 240`: Longitud de la ventana input.
+       - `-L 240`: Longitud de la ventana output.
+
+  5. **LPC**: 
+     - **Misión**: `lpc` calcula los coeficientes de predicción lineal (LPC) para cada trama.
+     - **Opciones**:
+       - `-l 240`: Longitud de la trama.
+       - `-m $lpc_order`: Orden del análisis LPC.
 
 - Explique el procedimiento seguido para obtener un fichero de formato *fmatrix* a partir de los ficheros de
   salida de SPTK (líneas 45 a 51 del script `wav2lp.sh`).
+  1. **Calculando el Número de Filas y Columnas**:
+       - `ncol=$((lpc_order+1))`: Calcula el número de columnas como el orden LPC más uno.
+       - `nrow=`$X2X +fa < $base.lp | wc -l | perl -ne 'print $_/'$ncol', "\n";'`: Calcula el número de filas dividiendo el número total de elementos por el número de columnas.
 
+    2. **Construyendo el Fichero `fmatrix`**:
+       - `echo $nrow $ncol | $X2X +aI > $outputfile`: Escribe el número de filas y columnas en el archivo de salida `outputfile`.
+       - `cat $base.lp >> $outputfile`: Añade los datos LPC calculados al archivo de salida `outputfile`.
+       
   * ¿Por qué es más conveniente el formato *fmatrix* que el SPTK?
+    
+    El formato `fmatrix` es más conveniente porque permite trabajar con una señal organizada y estructurada en tramas. En fmatrix, cada columna representa los coeficientes LPC y cada fila corresponde a una trama. Este formato facilita el trabajo con los dato
 
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales de predicción lineal
   (LPCC) en su fichero <code>scripts/wav2lpcc.sh</code>:
 
+  ```sh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $LPC -l 240 -m $lpc_order | $LPCC -m $lpc_order -M $lpcc_order > $base.lpcc || exit 1
+  
 - Escriba el *pipeline* principal usado para calcular los coeficientes cepstrales en escala Mel (MFCC) en su
   fichero <code>scripts/wav2mfcc.sh</code>:
+  
+  ```sh
+  sox $inputfile -t raw -e signed -b 16 - | $X2X +sf | $FRAME -l 240 -p 80 | $WINDOW -l 240 -L 240 | $MFCC -m $mfcc_order -n $mel_filter_order > $base.lp || exit 1
 
+  
 ### Extracción de características.
 
 - Inserte una imagen mostrando la dependencia entre los coeficientes 2 y 3 de las tres parametrizaciones
